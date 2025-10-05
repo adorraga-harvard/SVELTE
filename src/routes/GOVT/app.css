@@ -1,0 +1,74 @@
+/* Rule #1: Promote styles to GLOBAL when they define the core layout structure */
+
+/* This is the CSS Grid definition for the main layout in +layout.svelte.
+  It creates the sticky header/footer structure.
+*/
+@import 'tailwindcss';
+@plugin '@tailwindcss/forms';
+@plugin '@tailwindcss/typography';
+
+@plugin "daisyui" {
+  themes: all;
+}
+
+
+.portal-layout {
+	display: grid;
+	grid-template-rows: auto 1fr auto;
+	grid-template-columns: 100%;
+}
+
+/* "World-class" polish: A custom scrollbar for Webkit browsers (Chrome, Safari, Edge).
+  This makes the UI feel more consistent and less like a default browser page.
+*/
+main::-webkit-scrollbar {
+	width: 12px;
+}
+
+main::-webkit-scrollbar-track {
+	background: hsl(var(--b2)); /* Uses DaisyUI's base-200 color */
+}
+
+main::-webkit-scrollbar-thumb {
+	background-color: hsl(var(--p)); /* Uses DaisyUI's primary color */
+	border-radius: 20px;
+	border: 3px solid hsl(var(--b2)); /* Creates padding around thumb */
+}
+
+
+@keyframes fadeInUpScale {
+	from {
+		opacity: 0;
+		transform: scale(0.95) translateY(20px);
+	}
+	to {
+		opacity: 1;
+		transform: scale(1) translateY(0);
+	}
+}
+
+.anim-fade-in-up-scale {
+	animation: fadeInUpScale 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/**
+ * A specific animation for logos or icons on hover to gently spin and scale,
+ * adding a delightful micro-interaction for users.
+ */
+@keyframes logoHoverSpin {
+	from {
+		transform: scale(1) rotate(0deg);
+	}
+	to {
+		transform: scale(0.95) rotate(360deg);
+	}
+}
+
+/*
+ * Apply the logoHoverSpin animation on hover to any element with the
+ * .anim-logo-hover-spin class that is a child of an element with the .group class.
+ */
+.group:hover .anim-logo-hover-spin {
+	animation: logoHoverSpin 2s ease-in-out;
+}
+

@@ -1,0 +1,139 @@
+/* ===========================
+   Core Tailwind & DaisyUI Setup
+   =========================== */
+@import 'tailwindcss';
+@plugin '@tailwindcss/forms';
+@plugin '@tailwindcss/typography';
+@plugin "daisyui" {
+  themes: all;
+}
+
+/* ===========================
+   Global Project Layout
+   =========================== */
+.portal-layout {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  grid-template-columns: 100%;
+}
+
+/* Custom scrollbar (Webkit only) */
+main::-webkit-scrollbar {
+  width: 12px;
+}
+
+main::-webkit-scrollbar-track {
+  background: hsl(var(--b2));
+}
+
+main::-webkit-scrollbar-thumb {
+  background-color: hsl(var(--p));
+  border-radius: 20px;
+  border: 3px solid hsl(var(--b2));
+}
+
+.outline_me {
+  background-color: transparent;
+  text-shadow: -2px -2px 0 #000, 2px -2px 0 #000,
+               -2px 2px 0 #000, 2px 2px 0 #000;
+}
+
+/* ===========================
+   Animations
+   =========================== */
+@keyframes fadeInUpScale {
+  from { opacity: 0; transform: scale(0.95) translateY(20px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.anim-fade-in-up-scale {
+  animation: fadeInUpScale 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes logoHoverSpin {
+  from { transform: scale(1) rotate(0deg); }
+  to   { transform: scale(0.95) rotate(360deg); }
+}
+
+.group:hover .anim-logo-hover-spin {
+  animation: logoHoverSpin 2s ease-in-out;
+}
+
+/* ===========================
+   Dropdown & Swap Refinements
+   =========================== */
+.theme-dropdown {
+  top: 1px;
+  height: 28.6rem;
+  max-height: calc(100vh - 10rem);
+  width: 14rem;
+  margin-top: 4rem;
+  z-index: 1;
+}
+
+/* ===========================
+   Endpoint Wrappers
+   =========================== */
+.endpoint-container {
+  @apply p-6 my-4 rounded-lg shadow-lg bg-base-100;
+}
+
+.endpoint-title {
+  @apply text-2xl font-bold mb-2;
+}
+
+.endpoint-desc {
+  @apply text-base text-gray-700 mb-4;
+}
+
+/* Multi-type endpoints */
+.form { @apply p-4 shadow-lg rounded-lg bg-base-100; }
+.dashboard { @apply space-y-4; }
+.info { @apply prose lg:prose-xl max-w-none p-6 rounded-lg shadow bg-base-100; }
+.upload { @apply p-6 shadow-lg rounded-lg bg-base-100; }
+.checklist { @apply p-4; }
+.map { @apply p-6 rounded-lg border border-base-300 bg-gray-100; }
+
+/* ===========================
+   Forum / Blog Prototype
+   =========================== */
+.forum-thread { @apply space-y-6; }
+
+.forum-post { @apply p-4 rounded-lg shadow-lg bg-base-100; }
+
+.forum-post-header { @apply flex items-center justify-between mb-2; }
+
+.forum-post-user { @apply font-bold text-primary; }
+
+.forum-post-date { @apply text-sm text-gray-500; }
+
+.forum-post-content { @apply text-gray-700; }
+
+/* ===========================
+   DaisyUI Chat Component Emulation
+   =========================== */
+.chat-container {
+  @apply flex flex-col space-y-2 p-4 border rounded-lg max-h-96 overflow-y-auto;
+}
+
+.chat-message { @apply p-2 rounded-lg max-w-xs; }
+
+/* The color/state classes remain in markup */
+.chat-message-user {}
+.chat-message-other {}
+
+/* ===========================
+   DaisyUI Helpers (used in markup)
+   =========================== */
+.alert-custom { @apply shadow-lg rounded-lg; }
+.hero-section { @apply min-h-64 p-6 rounded-lg bg-base-200; }
+.dropdown-custom {} /* use dropdown & dropdown-hover in markup */
+.swap-custom {}     /* use swap & swap-rotate in markup */
+
+/* ===========================
+   Utilities / Consistency
+   =========================== */
+.card-actions { @apply flex justify-end mt-4; }
+.input-bordered { @apply border rounded-md p-2 w-full; }
+.button-primary { @apply px-4 py-2 rounded-lg; }
+.scrollable { @apply overflow-x-auto; }

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ISSP Automation Proposal</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      line-height: 1.6;
+      color: #333;
+    }
+    h1, h2, h3 {
+      color: #004080;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+    blockquote {
+      font-style: italic;
+      color: #555;
+      margin: 20px 0;
+      padding-left: 20px;
+      border-left: 4px solid #ccc;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Proposal for Metadata-Driven Automation in ISSP Evaluation</h1>
+  <p><strong>Submitted by:</strong> Amador Raga, Computer Scientist<br>
+  <strong>Date:</strong> August 2025</p>
+
+  <h2>Executive Summary</h2>
+  <p>Following the release of <strong>MITHI Advisory No. 2025-02</strong>, the <strong>DICT endorsement requirement for Information Systems Strategic Plans (ISSPs)</strong> has been officially lifted. Agencies now submit ISSPs directly to the <strong>MITHI Steering Committee Secretariat</strong>, streamlining the process but introducing new challenges in volume, consistency, and strategic alignment.</p>
+
+  <blockquote>“We trust agencies to innovate responsibly. MITHI must now evolve to support that trust.”<br>
+  — <strong>DICT Secretary Henry Aguda</strong>, April 2025</blockquote>
+
+  <h2>Problem Statement</h2>
+  <ul>
+    <li><strong>Manual review is unsustainable:</strong> With DICT no longer vetting ISSPs, MITHI faces a surge in submissions.</li>
+    <li><strong>Inconsistent formats:</strong> ISSPs vary widely, making comparative analysis difficult.</li>
+    <li><strong>Strategic misalignment risk:</strong> Projects may diverge from national ICT priorities without structured oversight.</li>
+  </ul>
+
+  <h2>Strategic Opportunity</h2>
+  <p>This shift presents a unique opportunity to modernize the ISSP evaluation process through <strong>metadata-driven automation</strong>, ensuring scalability, transparency, and alignment with digital governance goals.</p>
+
+  <hr>
+
+  <h2>Proposed Solution</h2>
+
+  <h3>1. Metadata Schema for ISSPs</h3>
+  <ul>
+    <li>Project type (e.g., infrastructure, citizen services, cybersecurity)</li>
+    <li>Budget and funding source</li>
+    <li>Agency priority level</li>
+    <li>SDG alignment</li>
+    <li>Technology stack and dependencies</li>
+  </ul>
+
+  <h3>2. Automated Scoring Engine</h3>
+  <ul>
+    <li>Strategic relevance</li>
+    <li>Technical feasibility</li>
+    <li>Budget efficiency</li>
+    <li>Interoperability potential</li>
+  </ul>
+
+  <h3>3. Reviewer Dashboard</h3>
+  <ul>
+    <li>Real-time filtering and ranking</li>
+    <li>Commenting and feedback tools</li>
+    <li>Exportable summaries for DBM integration</li>
+  </ul>
+
+  <h2>Technical Stack</h2>
+  <ul>
+    <li><strong>Database:</strong> EdgeDB (schema-driven, relational)</li>
+    <li><strong>Frontend:</strong> SvelteKit + Tailwind CSS</li>
+    <li><strong>Server:</strong> NGINX with dynamic routing</li>
+    <li><strong>Containerization:</strong> Docker Compose for modular deployment</li>
+  </ul>
+
+  <h2>Implementation Timeline</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Phase</th>
+        <th>Timeline</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Prototype</td>
+        <td>Q3 2025</td>
+        <td>Develop metadata schema and scoring engine</td>
+      </tr>
+      <tr>
+        <td>Pilot</td>
+        <td>Q4 2025</td>
+        <td>Test with select agencies (e.g., DOH, DepEd, DSWD)</td>
+      </tr>
+      <tr>
+        <td>Rollout</td>
+        <td>Q2 2026</td>
+        <td>Full integration into MITHI review process</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Request for Endorsement</h2>
+  <p>This proposal seeks:</p>
+  <ul>
+    <li><strong>Technical endorsement from DICT</strong> to align with national ICT standards</li>
+    <li><strong>Policy endorsement from DBM</strong> to integrate metadata scoring into budget tagging and review</li>
+  </ul>
+
+</body>
+</html>

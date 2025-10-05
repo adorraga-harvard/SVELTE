@@ -1,0 +1,32 @@
+
+{
+    "extends": "./.svelte-kit/tsconfig.json",
+    "compilerOptions": {
+       "allowJs": true,
+       "checkJs": true,
+       "esModuleInterop": true,
+       "forceConsistentCasingInFileNames": true,
+       "resolveJsonModule": true,
+       "skipLibCheck": true,
+       "sourceMap": true,
+       "strict": true,
+       "moduleResolution": "bundler",
+       "baseUrl": ".",
+       "paths": {
+          "$lib": [
+             "src/lib"
+          ],
+          "$lib/*": [
+             "src/lib/*"
+          ],
+          // We only need this one alias for the GOVT directory.
+          "$govt": [
+             "src/routes/GOVT"
+          ],
+          "$govt/*": [
+             "src/routes/GOVT/*"
+          ]
+       }
+    }
+}
+

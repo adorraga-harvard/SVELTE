@@ -1,0 +1,209 @@
+@import 'tailwindcss';
+@plugin '@tailwindcss/forms';
+@plugin '@tailwindcss/typography';
+
+
+/*@plugin "daisyui" {*/
+/*  themes: all;*/
+/*}*/
+
+
+/*!* Custom Fonts *!*/
+
+/*@custom-variant dark (&:where(.dark, .dark *));*/
+
+/*label {*/
+/*    @apply text-white font-bold mb-2;*/
+/*}*/
+/*@font-face {*/
+/*    font-family: 'monoton';*/
+/*    src: url('/static/fonts/Monoton-Regular.ttf') format('truetype');*/
+/*        font-weight: normal;*/
+/*    font-style: normal;*/
+/*    font-display: swap;*/
+
+/*}*/
+
+/*@font-face {*/
+/*    font-family: 'spice';*/
+/*    src: url('/static/fonts/BungeeSpice-Regular.ttf') format('truetype');*/
+/*        font-weight: normal;*/
+/*    font-style: normal;*/
+/*    font-display: swap;*/
+
+/*}*/
+
+/*@font-face {*/
+/*    font-family: 'almendra';*/
+/*    src: url('/static/fonts/Kenney Rocket Square.ttf') format('truetype');*/
+/*        font-weight: normal;*/
+/*    font-style: normal;*/
+/*    font-display: swap;*/
+
+/*}*/
+
+/*.card-container {*/
+/*    @apply  min-h-screen bg-gradient-to-r from-blue-900 to-blue-500 text-white;*/
+/*}*/
+/*.section {*/
+/*    @apply shadow-lg rounded-xl p-2 max-w-[600px] hover:bg-blue-700 transition-shadow duration-300;*/
+/*}*/
+
+/*.section-title {*/
+/*    text-shadow: 2px 2px 4px cornflowerblue;*/
+/*    @apply text-4xl text-zinc-200 font-bold mb-2;*/
+/*}*/
+
+/*.section-container {*/
+/*    @apply flex flex-col h-full p-2 w-fit;*/
+/*}*/
+
+/*.text-content {*/
+/*    @apply text-gray-700 mb-4 leading-relaxed;*/
+/*}*/
+
+/*.field {*/
+/*    display: flex;*/
+/*    flex-direction: column;*/
+/*    margin-bottom: 12px;*/
+/*}*/
+
+
+/*label {*/
+/*    font-weight: bold;*/
+/*    color: white;*/
+/*    margin-bottom: 5px;*/
+/*}*/
+
+/*.error-message {*/
+/*    color: red;*/
+/*    font-size: 14px;*/
+/*    margin-top: 5px;*/
+/*}*/
+
+/*.input {*/
+/*    border: 1px solid #ddd;*/
+/*    border-radius: 5px;*/
+/*    padding: 8px;*/
+/*    font-size: 14px;*/
+/*    !*background: white;*!*/
+/*    color: white;*/
+/*}*/
+
+/*.input:focus {*/
+/*    outline: none;*/
+/*    color: green ;*/
+/*    font-weight:900;*/
+/*    border-color: #2E3A87;*/
+/*    background: linen;*/
+/*}*/
+
+/*!* Dropdown Components *!*/
+
+/*.dropdown-list {*/
+/*    max-height: 400px;*/
+/*    overflow-y: auto;*/
+/*}*/
+/*.dropdown-overlay {*/
+/*    @apply absolute z-50 top-full left-0 bg-teal-50 shadow-md rounded-md w-full mt-1;*/
+/*}*/
+
+/*.dropdown-content {*/
+/*    @apply z-40 p-1 my-0 text-sm text-zinc-800 shadow bg-teal-100 rounded-sm w-full;*/
+/*}*/
+
+/*!* Fields *!*/
+
+/*.field {*/
+/*    @apply flex flex-col mb-4 text-zinc-900;*/
+/*}*/
+/*label {*/
+/*    @apply mb-2 font-bold;*/
+/*}*/
+
+/*.shady {*/
+/*    @apply text-shadow-lg text-shadow-zinc-700;*/
+/*}*/
+
+/*.card {*/
+/*    @apply mx-4 px-2 rounded-lg shadow-md bg-transparent;*/
+/*}*/
+
+/*.section {*/
+/*    @apply text-3xl text-shadow-lg  p-1 bg-rose-50 hover:bg-transparent*/
+
+/*    text-shadow-zinc-500 font-bold text-zinc-300 justify-center mt-4 text-center;*/
+/*}*/
+
+/*!* 🚀 Global container styling *!*/
+
+/*.container {*/
+/*    color: black; !* ✅ Maintains readability across themes *!*/
+/*    border-radius: 8px; !* ✅ Smooth rounded edges *!*/
+/*    max-width: 800px;*/
+/*    width: 100%;*/
+/*    background-color: #ffffff;*/
+/*    padding: 40px 60px;*/
+/*    margin: 30px 0;*/
+/*    box-shadow: 0 4px 15px rgba(0,0,0,0.08);*/
+/*    border-top: 5px solid #003366; !* A formal, presidential blue *!*/
+/*}*/
+/*.stick {*/
+/*    @apply sticky top-0 z-50 bg-white shadow-md;*/
+/*}*/
+
+/*!* Custom styles for text shadow *!*/
+
+
+
+
+
+/*.text-shadow-lg {*/
+/*    text-shadow: 0 1px 2px rgba(0,0,0,0.33), 0 0 32px rgba(243, 86, 234, 0.7);*/
+/*}*/
+/*.drop-shadow-lg {*/
+/*    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.33)) drop-shadow(0 0 32px rgba(243, 86, 234, 0.7));*/
+/*}*/
+
+/*!* Game Container Styles *!*/
+
+/*.game-container-style {*/
+/*    !* Plastic texture effect *!*/
+/*    background-image: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.05) 0%, rgba(0,0,0,0) 70%),*/
+/*                      linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(0,0,0,0.1) 100%);*/
+/*    !* Stronger outer shadow *!*/
+/*    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.25), 0 10px 10px -5px rgba(0, 0, 0, 0.2);*/
+/*}*/
+/*!* Base Row Styles *!*/
+
+/*.row-base-style {*/
+/*    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06),*/
+/*                inset 0 1px 3px 0 rgba(0, 0, 0, 0.1), inset 0 1px 2px 0 rgba(0, 0, 0, 0.06);*/
+/*}*/
+/*!* Active Row Styles *!*/
+
+/*.row-active-style {*/
+/*    background: linear-gradient(to right, #fb923c, #ea580c); !* from-orange-600 to-orange-800 *!*/
+/*    opacity: 1;*/
+/*}*/
+/*!* Inactive Row Styles *!*/
+
+/*.row-inactive-style {*/
+/*    background: linear-gradient(to right, #c2410c, #7c2d12); !* from-orange-800 to-orange-950 *!*/
+/*    opacity: 0.7;*/
+/*}*/
+/*!* Base Peg Hole Styles *!*/
+
+/*.peg-hole-base-style {*/
+/*    !* Recessed shadow for the hole *!*/
+/*    box-shadow: inset 0 0 8px rgba(0,0,0,0.4), 0 2px 4px rgba(0,0,0,0.2);*/
+/*}*/
+/*!* Active Peg Hole Styles (when clicked/hovered) *!*/
+
+/*.peg-hole-base-style:active {*/
+/*    box-shadow: inset 0 0 12px rgba(0,0,0,0.6), 0 1px 2px rgba(0,0,0,0.1);*/
+/*}*/
+/*body {*/
+
+/*    @apply bg-base-200 text-base-content;*/
+/*}*/

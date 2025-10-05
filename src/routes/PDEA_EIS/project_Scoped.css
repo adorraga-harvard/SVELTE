@@ -1,0 +1,236 @@
+/*
+ * THISISI A dsfdsdsvdsvdv project_Scoped.css (v1.7 - Corrected Composition)
+ * =================================================================
+ * This stylesheet is the single source of truth for Tailwind CSS and
+ * the project's core design system.
+ *
+ * VERIFICATION:
+ * Corrected the custom gradient utilities to use Tailwind's '@apply'
+ * directive. This composes existing, functional utilities in a
+ * more robust way, ensuring the build process handles them
+ * correctly and resolving the visibility issue.
+ * =================================================================
+ */
+
+/* ===========================
+   1. Core Tailwind & DaisyUI Setup
+   =========================== */
+@import 'tailwindcss';
+@plugin '@tailwindcss/forms';
+@plugin '@tailwindcss/typography';
+@plugin "daisyui" {
+  themes: all;
+}
+
+
+/* =============================================================
+     2. PROJECT DESIGN SYSTEM (`project-` prefix)
+     =============================================================
+     These are the standardized classes for all components.
+*/
+@layer components {
+    /* --- Global Layout & Utilities --- */
+    .project-layout-main {
+       @apply grid h-screen grid-rows-[auto_1fr_auto] grid-cols-1;
+    }
+    .project-util-scrollable {
+       @apply overflow-y-auto;
+    }
+
+    /* --- SCROLLBAR STYLES --- */
+    .project-util-scrollbar::-webkit-scrollbar {
+       width: theme('spacing.2'); /* equivalent to w-2 */
+    }
+    .project-util-scrollbar::-webkit-scrollbar-track {
+       background-color: hsl(var(--b2)); /* DaisyUI variable for base-200 */
+    }
+    .project-util-scrollbar::-webkit-scrollbar-thumb {
+       background-color: hsl(var(--p)); /* DaisyUI variable for primary */
+       border-radius: theme('borderRadius.full');
+       border: 2px solid hsl(var(--b2));
+    }
+
+    /* --- Core Component Primitives --- */
+    .project-card {
+       @apply card bg-base-100 shadow-lg rounded-xl w-full border border-base-300/50;
+    }
+
+    .project-menu-title {
+        text-shadow: 2px 2px 6px gold;
+        @apply text-base-content/70 font-extrabold text-2xl;
+    }
+    .project-page-intro {
+        @apply text-base-content/70 font-bold text-xl;
+    }
+
+    .project-card-body {
+       @apply card-body p-4 sm:p-6;
+    }
+    .project-card-title {
+       @apply card-title text-xl font-bold tracking-tight;
+    }
+    .project-card-description {
+       @apply text-base-content/60 mt-1 text-sm;
+    }
+    .project-card-actions {
+       @apply card-actions justify-end gap-2 mt-4;
+    }
+    .project-card-divider {
+       @apply divider my-2;
+    }
+    .project-prose {
+       @apply prose max-w-none prose-p:text-base-content/80 prose-headings:text-base-content;
+    }
+
+    /* --- Specialized Components --- */
+    .project-kpi-deck {
+       @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4;
+    }
+    .project-kpi-card {
+       @apply card bg-base-100 shadow p-5 border border-base-300/50;
+    }
+    .project-kpi-title {
+       @apply card-title text-sm font-medium text-base-content/70;
+    }
+    .project-kpi-value {
+       @apply text-3xl font-bold mt-1;
+    }
+
+    .project-activity-feed {
+       @apply space-y-4;
+    }
+    .project-activity-item {
+       @apply flex items-start space-x-3;
+    }
+    .project-activity-icon {
+       @apply flex-shrink-0 p-2 bg-base-200 rounded-full;
+    }
+
+    .project-chart-container {
+       @apply flex justify-center items-center h-72 bg-base-200/50 rounded-lg mt-4;
+    }
+
+    .project-page-title {
+       @apply text-lg font-medium text-base-content pb-1 mb-4 pl-2 border-l-2 border-primary;
+    }
+
+    .project-description {
+       @apply p-3 bg-base-200 rounded-lg text-base-content/80 text-sm italic;
+    }
+
+    /* --- Tree Navigation 'Lines' Variant --- */
+    .tree-lines ul {
+       position: relative;
+    }
+    .tree-lines ul::before {
+       content: '';
+       @apply absolute top-0 bottom-0 w-0.5 bg-base-300;
+       left: 0.75rem;
+       transform: translateX(-50%);
+    }
+    .tree-lines li {
+       position: relative;
+    }
+    .tree-lines a::before {
+       content: '';
+       @apply absolute h-0.5 bg-base-300;
+       top: 1.25rem;
+       left: 0.75rem;
+       width: 0.75rem;
+       transform: translateX(-50%);
+    }
+    .tree-lines li:last-child > ul::before {
+       @apply h-5;
+    }
+}
+
+/* =============================================================
+     3. Custom Standalone Utilities & Animations
+   =============================================================
+   These are custom, non-component classes and keyframe animations.
+*/
+
+/* --- Gradient & Text Effects --- */
+
+/* A reusable hero gradient using the theme's primary, base, and secondary colors. */
+.bg-gradient-hero {
+  @apply bg-gradient-to-br from-[hsl(var(--p)/0.1)] via-[hsl(var(--b1))] to-[hsl(var(--s)/0.1)];
+}
+
+/* Creates a gradient text effect from the primary to the secondary color. */
+.text-gradient-primary-secondary {
+  @apply bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent;
+}
+
+/* A utility to create outlined text. The color uses the base-content variable. */
+.text-outline {
+  /* Adjust width and color as needed by changing the hsl variable. */
+  -webkit-text-stroke: 1px hsl(var(--bc)); /* For Webkit browsers */
+  text-stroke: 1px hsl(var(--bc));
+  color: transparent; /* Makes the inner text transparent to show the outline */
+}
+
+
+/* --- Animated Transitions --- */
+
+/* IN Animation: Fades in, moves up, and scales up slightly. */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-fade-in-up {
+  /* Forwards keeps the 'to' state after the animation finishes */
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+/* OUT Animation: Fades out and moves down. */
+@keyframes fadeOutDown {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+}
+
+
+ body, .futuristic-font {
+    font-family: 'Oxanium', monospace;
+  }
+
+.animate-fade-out-down {
+  animation: fadeOutDown 0.5s ease-in forwards;
+}
+
+.tooltip {
+  position: absolute;
+  white-space: nowrap;
+  background: #111827;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  pointer-events: none;
+  transition: opacity 0.1s ease, transform 0.1s ease;
+  z-index: 9999;
+}
+
+.tooltip[style*="display: block"] {
+  transform: scale(1);
+}
+
+.bar-v:hover, .bar-h:hover, path:hover {
+  filter: brightness(1.15);
+  stroke: #111;
+  stroke-width: 2px;
+}

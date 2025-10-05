@@ -1,0 +1,23 @@
+/*
+ * This file is for any custom styles that are not easily handled by Tailwind CSS classes.
+ * Since Tailwind and DaisyUI are doing most of the heavy lifting, this file is currently
+ * minimal. You can add more complex, non-utility-based styles here as needed.
+ */
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+    margin: 0;
+    box-sizing: border-box;
+}
+
+/* You could add more specific styles here if needed. */

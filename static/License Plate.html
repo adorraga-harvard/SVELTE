@@ -1,0 +1,75 @@
+<article>
+  <h1>Understanding License Plate Number Generation in the Philippines</h1>
+
+  <p><strong>Updated as of 2025</strong></p>
+
+  <p>License plate numbers in the Philippines are issued and regulated by the <strong>Land Transportation Office (LTO)</strong>. They serve as a government-sanctioned, unique identifier for motor vehicles on public roads. This document provides a definitive guide on how license plates are generated, what influences their patterns, and how this affects vehicle registration in digital systems like <code>Form_Persona.svelte</code>.</p>
+
+  <h2>1. Core Principles of Plate Number Generation</h2>
+  <ul>
+    <li>License plate numbers are <strong>not derived from the vehicle's VIN</strong> or chassis number.</li>
+    <li>Plate numbers are assigned by <strong>LTO Regional Offices</strong> based on <strong>availability</strong> within a predefined sequence pool.</li>
+    <li>They follow a <strong>three-letter, four-digit</strong> format for private vehicles (e.g., <code>NAA 1234</code>).</li>
+    <li>There are <strong>distinct series or prefixes per vehicle type and region</strong>.</li>
+  </ul>
+
+  <h2>2. Standard Format</h2>
+  <p>The current default format for newly registered vehicles is:</p>
+  <pre><code>[L][L][L] [0][0][0][0]</code></pre>
+  <p>Example: <code>NBG 7654</code></p>
+
+  <h3>Rules:</h3>
+  <ul>
+    <li><strong>First letter:</strong> Indicates the regional issuing office or region grouping.</li>
+    <li><strong>Second and third letters:</strong> Part of the sequential series.</li>
+    <li><strong>Four digits:</strong> Incrementing numbers per plate batch.</li>
+  </ul>
+
+  <h2>3. Regional Prefixes</h2>
+  <p>Below are commonly observed prefixes and their associated regions:</p>
+  <table border="1" cellpadding="6">
+    <thead>
+      <tr>
+        <th>Prefix Start</th>
+        <th>Region</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>N</td><td>Metro Manila (NCR)</td></tr>
+      <tr><td>V</td><td>CALABARZON (Region IV-A)</td></tr>
+      <tr><td>M</td><td>Davao Region</td></tr>
+      <tr><td>H</td><td>Cebu & Central Visayas (Region VII)</td></tr>
+      <tr><td>R</td><td>Ilocos Region</td></tr>
+    </tbody>
+  </table>
+
+  <h2>4. Special Formats</h2>
+  <ul>
+    <li><strong>Motorcycles:</strong> Use reverse formats like <code>1234 AB</code>.</li>
+    <li><strong>Government Vehicles:</strong> Red plates (e.g., <code>SGA 123</code>) or custom identifiers.</li>
+    <li><strong>Diplomatic Vehicles:</strong> Blue plates (e.g., <code>CD 123</code> for consular vehicles).</li>
+    <li><strong>Vanity Plates:</strong> Approved custom text (e.g., <code>JUAN-01</code>), with additional fees.</li>
+  </ul>
+
+  <h2>5. Simulation for Software Applications</h2>
+  <p>For prototyping and mock registration forms (e.g., <code>Form_Registration.svelte</code>), developers can simulate plate generation using the region:</p>
+  <pre><code>function generatePlateNumber(region) {
+  const regionPrefixes = {
+    NCR: 'N', RegionIV: 'V', Davao: 'M', Cebu: 'H'
+  };
+  const prefix = regionPrefixes[region] ?? 'X';
+  const letters = prefix + randomLetter() + randomLetter();
+  const digits = Math.floor(Math.random() * 9000 + 1000);
+  return `${letters} ${digits}`;
+}</code></pre>
+
+  <h2>6. Design Recommendations for Developers</h2>
+  <ul>
+    <li><strong>Always allow override or manual input</strong> for LTO-verified plate numbers.</li>
+    <li>Pre-fill plate field with <code>generatePlateNumber()</code> but allow user confirmation.</li>
+    <li>Include metadata such as <code>region_code</code>, <code>plate_type</code>, and <code>issuance_date</code> in the data model.</li>
+  </ul>
+
+  <h2>7. Conclusion</h2>
+  <p>Understanding how license plates are generated and assigned is crucial in replicating government processes digitally. The LTO's regional, sequential assignment system provides a simple, logical model for applications that simulate or integrate with Philippine vehicle registration systems. Developers and stakeholders are encouraged to treat this document as a <strong>Single Source of Truth</strong> as they build out <code>Form_Persona.svelte</code> for registration workflows.</p>
+</article>

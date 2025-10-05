@@ -1,0 +1,23 @@
+# dependencies
+node_modules/
+pnpm-lock.yaml
+package-lock.json
+
+# build output
+dist/
+build/
+.svelte-kit/
+.vercel/
+.netlify/
+
+# misc
+.env
+.DS_Store
+*.log
+identifier.sqlite
+identifier.sqlite-journal
+*.sqlite
+*.sqlite-journal
+*.sqlite-journal
+*.sqlite-wal
+*.sqlite-shm

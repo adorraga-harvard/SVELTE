@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDEA Executive Information System Database Documentation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: #fff;
+            padding: 20px 40px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2, h3 {
+            color: #1a237e;
+        }
+        h2 {
+            border-bottom: 2px solid #ccc;
+            padding-bottom: 5px;
+            margin-top: 30px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        li strong {
+            color: #555;
+        }
+        .description {
+            margin-left: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>PDEA Executive Information System Database Documentation</h1>
+
+        <h2>I. Lookup Tables</h2>
+        <p>These tables contain reference data, providing specific, static options for other tables. They are all identified by the <strong><code>lookup_</code></strong> prefix.</p>
+        <ul>
+            <li><strong><code>lookup_barrios</code></strong>: Stores geographical information including barrio, city, province, and region names and codes.</li>
+            <li><strong><code>lookup_biometric_types</code></strong>: Lists different types of biometrics with a name and description.</li>
+            <li><strong><code>lookup_cases_status</code></strong>: Defines the possible statuses for a case, with a name and description.</li>
+            <li><strong><code>lookup_drugs_schedule</code></strong>: Stores drug schedules with a name and description.</li>
+            <li><strong><code>lookup_drugs_type</code></strong>: Lists the types of drugs.</li>
+            <li><strong><code>lookup_drugs_vendor_category</code></strong>: Classifies categories of drug vendors.</li>
+            <li><strong><code>lookup_drugs_vendor_status</code></strong>: Defines the status of a drug vendor.</li>
+            <li><strong><code>lookup_drugs_vendor_type</code></strong>: Differentiates types of drug vendors.</li>
+            <li><strong><code>lookup_fullnames</code></strong>: A reference table for full names and genders.</li>
+            <li><strong><code>lookup_legal_courts</code></strong>: Stores a list of legal courts by name, city, and province.</li>
+            <li><strong><code>lookup_legal_order_types</code></strong>: Defines the types of legal court orders.</li>
+            <li><strong><code>lookup_operations_agency_partners</code></strong>: Lists partner agencies for operations with their acronyms and descriptions.</li>
+            <li><strong><code>lookup_operations_approvers</code></strong>: Lists individuals authorized to approve operations, with their rank, position, and PDEA unit.</li>
+            <li><strong><code>lookup_operations_roles</code></strong>: Defines the roles involved in operations.</li>
+            <li><strong><code>lookup_operations_types</code></strong>: Lists the types of operations.</li>
+            <li><strong><code>lookup_pdea_ranks</code></strong>: Defines the official ranks within PDEA.</li>
+            <li><strong><code>lookup_pdea_units</code></strong>: Lists the different units within PDEA.</li>
+            <li><strong><code>lookup_regions</code></strong>: Stores a list of regions.</li>
+            <li><strong><code>lookup_syndicate_roles</code></strong>: Defines the roles within a syndicate.</li>
+        </ul>
+
+        <h2>II. Main Data Tables</h2>
+        <p>These are the primary tables that hold the core operational data.</p>
+        <ul>
+            <li><code>drugs_roster</code></li>
+            <li><code>drugs_vendors</code></li>
+            <li><code>cases_master</code></li>
+            <li><code>legal_court_orders</code></li>
+            <li><code>operations_coc</code></li>
+            <li><code>operations_master</code></li>
+            <li><code>pdea_personnel</code></li>
+            <li><code>poi_biometrics</code></li>
+            <li><code>poi_contacts</code></li>
+            <li><code>poi_roster</code></li>
+            <li><code>poi_syndicates</code></li>
+        </ul>
+
+        <h2>III. Bridge Tables</h2>
+        <p>These tables are used to resolve many-to-many relationships between two or more main data tables.</p>
+        <ul>
+            <li><strong><code>drugs_vendors_map</code></strong>: Links <code>drugs_vendors</code> to <code>drugs_roster</code>.</li>
+            <li><strong><code>cases_drugs</code></strong>: Links <code>cases_master</code> to <code>drugs_roster</code>, detailing the quantity and seizure location of drugs in a case.</li>
+            <li><strong><code>cases_poi</code></strong>: Connects <code>cases_master</code> and <code>poi_roster</code>, defining a person's role in a case and their date of arrest.</li>
+            <li><strong><code>poi_syndicate_members</code></strong>: Links <code>poi_roster</code> to <code>poi_syndicates</code> and <code>lookup_syndicate_roles</code>, showing which persons of interest belong to which syndicates and their specific role.</li>
+            <li><strong><code>operations_master_operators</code></strong>: Links <code>operations_master</code> to <code>pdea_personnel</code> and <code>lookup_operations_roles</code>, detailing which personnel are assigned to an operation and their role.</li>
+        </ul>
+
+        <h2>IV. Hierarchy and Relationships</h2>
+        <p>The hierarchy starts with the <strong><code>lookup_</code> tables</strong> which provide the foundational reference data. The <strong>main data tables</strong> contain the core records and reference the lookup tables via foreign keys. The <strong>bridge tables</strong> connect the main data tables to model complex relationships.</p>
+        <p>The relationships and their direction are as follows:</p>
+        <ul>
+            <li><strong><code>cases_drugs</code></strong> has a foreign key <code>case_id</code> pointing to <code>cases_master</code> and <code>drug_id</code> pointing to <code>drugs_roster</code>.</li>
+            <li><strong><code>cases_master</code></strong> has a foreign key <code>status_id</code> pointing to <code>lookup_cases_status</code> and <code>master_id</code> pointing to <code>operations_master</code>.</li>
+            <li><strong><code>cases_poi</code></strong> has <code>case_id</code> pointing to <code>cases_master</code> and <code>poi_id</code> pointing to <code>poi_roster</code>.</li>
+            <li><strong><code>drugs_roster</code></strong> has foreign keys <code>schedule_id</code> pointing to <code>lookup_drugs_schedule</code> and <code>type_id</code> pointing to <code>lookup_drugs_type</code>.</li>
+            <li><strong><code>drugs_vendors</code></strong> has foreign keys <code>status_id</code> pointing to <code>lookup_drugs_vendor_status</code> and <code>vendor_type_id</code> pointing to <code>lookup_drugs_vendor_type</code>.</li>
+            <li><strong><code>drugs_vendors_map</code></strong> has a foreign key <code>vendor_id</code> pointing to <code>drugs_vendors</code>.</li>
+            <li><strong><code>legal_court_orders</code></strong> has foreign keys <code>case_id</code> pointing to <code>cases_master</code>, <code>issuing_court_id</code> pointing to <code>lookup_legal_courts</code>, and <code>order_type_id</code> pointing to <code>lookup_legal_order_types</code>.</li>
+            <li><strong><code>operations_coc</code></strong> has foreign keys <code>approver_id</code> pointing to <code>lookup_operations_approvers</code> and <code>region_id</code> pointing to <code>lookup_regions</code>.</li>
+            <li><strong><code>operations_master</code></strong> has foreign keys <code>operation_type_id</code> pointing to <code>lookup_operations_types</code>, <code>region_id</code> pointing to <code>lookup_regions</code>, and <code>coc_id</code> pointing to <code>operations_coc</code>.</li>
+            <li><strong><code>operations_master_operators</code></strong> has foreign keys <code>role_id</code> pointing to <code>lookup_operations_roles</code>, <code>master_id</code> pointing to <code>operations_master</code>, and <code>personnel_id</code> pointing to <code>pdea_personnel</code>.</li>
+            <li><strong><code>pdea_personnel</code></strong> has foreign keys <code>rank_id</code> pointing to <code>lookup_pdea_ranks</code> and <code>unit_id</code> pointing to <code>lookup_pdea_units</code>.</li>
+            <li><strong><code>poi_biometrics</code></strong>, <strong><code>poi_contacts</code></strong>, and <strong><code>cases_poi</code></strong> all have <code>poi_id</code> foreign keys pointing to <code>poi_roster</code>.</li>
+            <li><strong><code>poi_syndicate_members</code></strong> has foreign keys <code>role_id</code> pointing to <code>lookup_syndicate_roles</code>, <code>poi_id</code> pointing to <code>poi_roster</code>, and <code>syndicate_id</code> pointing to <code>poi_syndicates</code>.</li>
+        </ul>
+    </div>
+
+</body>
+</html>

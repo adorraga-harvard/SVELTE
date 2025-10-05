@@ -1,0 +1,148 @@
+targetPath: AMADOR
+friendlyName: Independent Committee on Infrastructure
+navigation:
+  - slug: dashboard
+    navTitle: Dashboard
+    icon: LayoutDashboard
+    description: >-
+      The central hub of the ICI system, providing a live overview of
+      infrastructure monitoring, corruption alerts, and citizen engagement.
+    children:
+      - slug: dashboard/overview
+        navTitle: Overview
+        icon: Eye
+        description: >-
+          A snapshot of key metrics and summary insights from across the ICI
+          system.
+      - slug: dashboard/live-alerts
+        navTitle: Alerts
+        icon: Bell
+        description: >-
+          Real-time notifications and alerts regarding infrastructure issues or
+          anomalies.
+  - slug: about
+    navTitle: About
+    icon: Info
+    description: >-
+      Learn about the history, mandate, and leadership structure of the
+      Independent Commission for Infrastructure (ICI).
+    children:
+      - slug: about/history
+        navTitle: History
+        icon: BookOpen
+        description: The historical background of ICI, its formation, and objectives.
+        children:
+          - slug: about/history/formation
+            navTitle: Formation
+            icon: Calendar
+            description: Details on the establishment and legal foundations of ICI.
+          - slug: about/history/background
+            navTitle: Background
+            icon: Scroll
+            description: Additional context on the purpose and early development of ICI.
+      - slug: about/mandate
+        navTitle: Mandate
+        icon: Gavel
+        description: >-
+          An overview of ICI’s legal authority, powers, and scope of
+          investigations.
+        children:
+          - slug: about/mandate/investigation-scope
+            navTitle: Scope
+            icon: Search
+            description: Defines the areas and types of projects ICI investigates.
+          - slug: about/mandate/legal-authority
+            navTitle: Authority
+            icon: Scale
+            description: Legal frameworks and mandates enabling ICI’s operations.
+      - slug: about/leadership
+        navTitle: Leadership
+        icon: Users
+        description: >-
+          Profiles of the commissioners, secretariat, and organizational
+          structure.
+        children:
+          - slug: about/leadership/commissioners
+            navTitle: Commissioners
+            icon: UserCheck
+            description: Information on current commissioners and advisers.
+          - slug: about/leadership/secretariat
+            navTitle: Secretariat
+            icon: ClipboardList
+            description: Supporting staff and the secretariat team.
+  - slug: corruption-findings
+    navTitle: Findings
+    icon: AlertTriangle
+    description: >-
+      Access dashboards and detailed reports on corruption findings and
+      anomalies in infrastructure projects.
+    children:
+      - slug: corruption-findings/fund-misuse
+        navTitle: Fund Misuse
+        icon: Landmark
+        description: Alerts and records concerning misuse of public funds.
+      - slug: corruption-findings/procurement-issues
+        navTitle: Procurement
+        icon: FileText
+        description: Reports on irregularities in procurement processes.
+      - slug: corruption-findings/project-delays
+        navTitle: Delays
+        icon: Clock
+        description: Tracking project delays, cost overruns, and impact analysis.
+  - slug: soundboard
+    navTitle: Soundboard
+    icon: MessageSquare
+    description: A platform for citizen engagement, feedback, and whistleblowing.
+    children:
+      - slug: soundboard/public-feedback
+        navTitle: Feedback
+        icon: MessageCircle
+        description: Submit and review public feedback on ongoing projects.
+      - slug: soundboard/whistleblower-reports
+        navTitle: Whistleblowers
+        icon: ShieldAlert
+        description: Secure reporting for whistleblowers to flag irregularities.
+  - slug: agencies
+    navTitle: Agencies
+    icon: Building2
+    description: Browse the agencies investigated and their related projects.
+    children:
+      - slug: agencies/dpwh
+        navTitle: DPWH
+        icon: Hammer
+        description: Department of Public Works & Highways
+      - slug: agencies/dotr
+        navTitle: DOTr
+        icon: BusFront
+        description: Department of Transportation
+      - slug: agencies/dict
+        navTitle: DICT
+        icon: Server
+        description: Department of ICT
+      - slug: agencies/psa
+        navTitle: PSA
+        icon: Database
+        description: Philippine Statistics Authority
+      - slug: agencies/doh
+        navTitle: DOH
+        icon: Hospital
+        description: Department of Health
+  - slug: investigation-reports
+    navTitle: Reports
+    icon: FileText
+    description: >-
+      Access all investigation reports, case studies, and open datasets for
+      transparency.
+    children:
+      - slug: investigation-reports/annual-reports
+        navTitle: Annual
+        icon: Calendar
+        description: Annual & thematic reports.
+      - slug: investigation-reports/case-studies
+        navTitle: Case Studies
+        icon: FileSearch
+        description: In-depth case studies and investigations.
+      - slug: investigation-reports/open-data
+        navTitle: Open Data
+        icon: Database
+        description: Datasets and open access files.

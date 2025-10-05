@@ -1,0 +1,47 @@
+/* src/lib/Components/Comp_LGUSelector.css */
+
+@import 'tailwindcss';
+@plugin '@tailwindcss/forms';
+@plugin '@tailwindcss/typography';
+@plugin '@tailwindcss/forms';
+@plugin "daisyui";
+:root {
+    --color-pulse: theme('colors.indigo.400');
+    --color-flash: theme('colors.amber.200');
+}
+/* Base styles for the tabs container */
+.tabs-container {
+  display: flex;
+  justify-content: center;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  @apply mb-4 bg-indigo-400; /* Apply Tailwind utilities here */
+}
+
+/* Base styles for each tab */
+.tab-item {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+  text-align: center;
+  @apply flex-grow sm:flex-none bg-indigo-400 text-indigo-100 hover:bg-indigo-500;
+}
+
+/* Styles for the active tab */
+.tab-active-item {
+  @apply bg-white text-indigo-700;
+}
+
+/* Styles for a disabled tab */
+.tab-disabled-item {
+  cursor: not-allowed;
+  opacity: 0.6;
+  @apply bg-indigo-300 hover:bg-indigo-300; /* Prevent hover on disabled */
+}
+
+
+.toast-overlay {
+    @apply absolute bottom-4 left-1/2 transform -translate-x-1/2;
+    z-index: 50;
+  }

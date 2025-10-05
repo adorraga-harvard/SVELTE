@@ -1,0 +1,243 @@
+/**
+ * project_EngineerV2.ts
+ * =================================================================
+ * PAGE ASSEMBLER & NAVIGATION SCRIPT (V2) - Final Architecture
+ * =================================================================
+ * Refactored to generate a TypeScript module (navigation.ts) instead
+ * of a YAML file for better build-time bundling, with enhanced filename
+ * and slug sanitization and a fix for the trailing comma error.
+ */
+
+import { config } from './project_Config';
+import type { Route } from './project_Config';
+import fs from 'fs';
+import path from 'path';
+
+// --- CONFIGURATION ---
+const PROVIDERS_DIR = path.resolve('./Providers');
+const NAVIGATION_TS_FILE = path.resolve('./navigation.ts');
+const RESOLVER_FILE = path.join(PROVIDERS_DIR, 'ProviderResolver.ts');
+const COMPONENTS_BASE_PATH = '$lib/Components/Templates';
+
+// --- ANSI COLORS & STYLES ---
+const RESET = '\x1b[0m';
+const BOLD = '\x1b[1m';
+const RED = '\x1b[31m';
+const GREEN = '\x1b[32m';
+const YELLOW = '\x1b[33m';
+const CYAN = '\x1b[36m';
+const MAGENTA = '\x1b[35m';
+
+// --- TYPE DEFINITION ---
+interface NavNode {
+    slug: string;
+    navTitle: string;
+    icon?: string | null;
+    children?: NavNode[];
+    description?: string;
+}
+
+// --- HELPERS ---
+function kebabToPascalCase(kebab: string): string {
+    return kebab
+       .split('-')
+       .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+       .join('');
+}
+
+/**
+ * Sanitizes a string for use as a filename, slug, or URL path.
+ * - Converts to lowercase.
+ * - Replaces spaces and non-alphanumeric characters with hyphens.
+ * - Removes leading/trailing hyphens.
+ */
+function sanitizeFilename(input: string): string {
+    return input
+        .toLowerCase()
+        // Replace all characters that are not a-z, 0-9, or a hyphen with a hyphen
+        .replace(/[^a-z0-9-]/g, '-')
+        // Replace multiple consecutive hyphens with a single hyphen
+        .replace(/--+/g, '-')
+        // Trim leading/trailing hyphens
+        .replace(/^-+|-+$/g, '');
+}
+
+function traverseRoutes(
+    nodes: Route[],
+    callback: (route: Route, full_fs_path: string) => void,
+    parentPath = ''
+): void {
+    for (const node of nodes) {
+       // Use the new sanitizeFilename function for the file system path
+       const slugifiedPath = sanitizeFilename(node.fs_path);
+       const currentPath = path.join(parentPath, slugifiedPath).replace(/\\/g, '/');
+       callback(node, currentPath);
+       if (node.children && node.children.length > 0) {
+          traverseRoutes(node.children, callback, currentPath);
+       }
+    }
+}
+
+function createNavigationStructure(nodes: Route[], parentPath = ''): NavNode[] {
+    const navNodes: NavNode[] = [];
+    for (const node of nodes) {
+       // Use the new sanitizeFilename function for the slug
+       const slugifiedPath = sanitizeFilename(node.fs_path);
+       const currentPath = path.join(parentPath, slugifiedPath).replace(/\\/g, '/');
+
+       const navNode: NavNode = {
+          slug: currentPath.startsWith('/') ? currentPath.substring(1) : currentPath,
+          navTitle: node.navTitle,
+          icon: node.icon,
+          description: node.description || `Welcome to the ${node.navTitle} section.`
+       };
+
+       if (node.children && node.children.length > 0) {
+          navNode.children = createNavigationStructure(node.children, currentPath);
+       }
+       navNodes.push(navNode);
+    }
+    return navNodes;
+}
+
+function createProviderFileV2(route: Route, full_fs_path: string): void {
+    const templateNames = (route.templates || '').split(',').map((t) => t.trim()).filter(Boolean);
+    // Use the new sanitizeFilename function for the provider file name
+    const slugifiedNavTitle = sanitizeFilename(route.navTitle);
+    const providerFilePath = path.join(PROVIDERS_DIR, full_fs_path, slugifiedNavTitle, `+page.svelte`);
+
+    fs.mkdirSync(path.dirname(providerFilePath), { recursive: true });
+
+    let componentImports = '';
+    let componentRenderings = '';
+
+    if (templateNames.length > 0) {
+       componentImports = templateNames
+          .map((template) => {
+             const componentName = kebabToPascalCase(template);
+             return `import ${componentName} from '${COMPONENTS_BASE_PATH}/${componentName}.svelte';`;
+          })
+          .join('\n');
+
+       componentRenderings = templateNames
+          .map((template) => {
+             const componentName = kebabToPascalCase(template);
+             return `  <${componentName} props={data} />`;
+          })
+          .join('\n');
+    } else {
+       console.log(`${YELLOW}${BOLD}  ⚠ No templates for:${RESET} ${CYAN}${full_fs_path}${RESET}`);
+    }
+
+    const descriptionText = route.description || `Welcome to the ${route.navTitle} section.`;
+    const safeDescription = descriptionText.replace(/`/g, '\\`');
+
+    const svelteContent = `<script lang="ts">
+  // Auto-generated by project_EngineerV2.ts for path: /${full_fs_path}
+  export let data: any;
+
+${componentImports}
+<\/script>
+
+<div class="space-y-6 project-provider">
+  ${
+       route.description
+          ? `<div class="project-page-intro  text-base-content/80 leading-relaxed">
+    {@html \`${safeDescription}\`}
+  </div>`
+          : ''
+    }
+${componentRenderings}
+</div>
+`;
+
+    fs.writeFileSync(providerFilePath, svelteContent, 'utf-8');
+    console.log(`${GREEN}${BOLD}    ✔ Assembled provider:${RESET} ${CYAN}${providerFilePath}${RESET}`);
+}
+
+// --- MAIN EXECUTION ---
+function main(): void {
+    if (process.argv.length < 3) {
+       console.error(`${RED}${BOLD}Usage:${RESET} npx tsx project_EngineerV2.ts "Friendly Name"`);
+       process.exit(1);
+    }
+
+    const friendlyName = process.argv[2];
+    const targetPath = path.basename(process.cwd());
+
+    console.log(`\n${MAGENTA}${BOLD}>>> Project Engineer V2 Starting Build${RESET}\n`);
+    console.log(`${CYAN}Friendly Name:${RESET} ${BOLD}${friendlyName}${RESET}`);
+    console.log(`${CYAN}Target Path  :${RESET} ${BOLD}${targetPath}${RESET}\n`);
+
+    // --- Generate navigation.ts ---
+    try {
+        const navigationStructure = createNavigationStructure(config);
+        const navigationJson = JSON.stringify(navigationStructure, null, 2);
+        const siteInfoJson = JSON.stringify({ targetPath, friendlyName }, null, 2);
+        const tsContent = `// Auto-generated by project_EngineerV2.ts on ${new Date().toString()}
+// This file contains the site's navigation structure and metadata for build-time import.
+
+export const siteInfo = ${siteInfoJson};
+
+export const navigation = ${navigationJson};
+`;
+        fs.writeFileSync(NAVIGATION_TS_FILE, tsContent, 'utf-8');
+        console.log(`${GREEN}${BOLD}  ✔ navigation.ts generated with siteInfo & navigation data${RESET}`);
+        console.log(`${YELLOW}  -> Path: ${NAVIGATION_TS_FILE}${RESET}\n`);
+    } catch (error) {
+        console.error(`${RED}${BOLD}Error generating navigation.ts:${RESET}`, error);
+        process.exit(1);
+    }
+
+    // --- Prepare Providers folder ---
+    try {
+        fs.rmSync(PROVIDERS_DIR, { recursive: true, force: true });
+        fs.mkdirSync(PROVIDERS_DIR, { recursive: true });
+        console.log(`${GREEN}${BOLD}  ✔ Providers folder created${RESET}: ${CYAN}${PROVIDERS_DIR}${RESET}\n`);
+    } catch (error) {
+        console.error(`${RED}${BOLD}Error preparing Providers directory:${RESET}`, error);
+        process.exit(1);
+    }
+
+    // --- Generate Provider files + Resolver ---
+    const resolverEntries: string[] = [];
+    try {
+        traverseRoutes(config, (route, full_fs_path) => {
+            createProviderFileV2(route, full_fs_path);
+
+            const resolverPath = full_fs_path.startsWith('/') ? full_fs_path.substring(1).trim() : full_fs_path.trim();
+            const slugifiedNavTitle = sanitizeFilename(route.navTitle);
+            const importPath = `./${full_fs_path.trim()}/${slugifiedNavTitle}/+page.svelte`;
+
+            // Defensive check to ensure both parts of the resolver entry are non-empty
+            if (resolverPath && slugifiedNavTitle) {
+              resolverEntries.push(`  "${resolverPath}": () => import("${importPath}")`);
+            } else {
+              console.warn(`${YELLOW}${BOLD}  ⚠ Skipping resolver entry for a route with an empty path or title:${RESET} ${JSON.stringify(route)}`);
+            }
+        });
+
+        const resolverContent = `// Auto-generated by project_EngineerV2.ts on ${new Date().toString()}\nexport const providers = {\n${resolverEntries.join(',\n')}\n};\n`;
+
+        console.log(`${CYAN}${BOLD}--- Start of ProviderResolver.ts content ---${RESET}`);
+        console.log(resolverContent);
+        console.log(`${CYAN}${BOLD}--- End of ProviderResolver.ts content ---${RESET}`);
+
+        fs.writeFileSync(RESOLVER_FILE, resolverContent, 'utf-8');
+        console.log(`${GREEN}${BOLD}  ✔ ProviderResolver.ts finalized${RESET}: ${CYAN}${RESOLVER_FILE}${RESET}`);
+    } catch (error) {
+        console.error(`${RED}${BOLD}Error generating provider files or resolver:${RESET}`);
+        console.error(`- Error details: ${error}`);
+        console.error(`- The error likely occurred with the following paths or titles:`);
+        console.error(`- Route: ${JSON.stringify(config.find(r => r.fs_path === full_fs_path.split('/').pop()))}`);
+        console.error(`- Full FS Path: ${full_fs_path}`);
+        console.error(`- Nav Title: ${config.find(r => r.fs_path === full_fs_path.split('/').pop())?.navTitle}`);
+        process.exit(1);
+    }
+
+    console.log(`\n${MAGENTA}${BOLD}>>> Build Complete!${RESET}`);
+    console.log(`${CYAN}✔ Navigation blueprint, descriptions, and Providers are ready.${RESET}\n`);
+}
+
+// --- RUN ---
+main();
