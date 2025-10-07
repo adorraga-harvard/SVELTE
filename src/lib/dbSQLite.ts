@@ -8,7 +8,7 @@ export function runQuery<T>(
     params: any[] = [],
     sqlFile: string = 'pdea'
 ): T[] {
-    const dbPath = path.resolve(process.cwd(), `/etc/nginx/${sqlFile}.sqlite`);
+    const dbPath = path.resolve(process.cwd(), `/home/webhost/data/${sqlFile}.sqlite`);
     let db: Database | null = null;
     try {
         db = new Database(dbPath, { readonly: true });

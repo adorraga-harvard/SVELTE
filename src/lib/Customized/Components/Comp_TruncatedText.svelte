@@ -12,7 +12,8 @@
   <span class="badge badge-outline animate-blink badge-sm ml-1 cursor-help group-hover:bg-primary group-hover:text-primary-content">
     ...
   </span>
-  <div class="absolute top-0 left-1/2 -translate-x-1/2 mt-8 z-50 p-2 bg-base-300 text-base-content rounded-md shadow-lg hidden group-hover:block w-max max-w-lg">
+  <div class="absolute outline-4 outline-rose-300 top-0 left-1/2 -translate-x-1/2 mt-8 z-50 p-2 mx-4 bg-rose-200 text-zinc-800 rounded-md shadow-lg hidden
+    group-hover:block w-max max-w-lg">
     <span class="text-xs">{fullText}</span>
   </div>
 </div>

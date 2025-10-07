@@ -40,6 +40,51 @@
         </div>
     </div>
 
+ <!-- NEW SECTION: HUMOROUS BUT COMPELLING DEFINITIONS -->
+    <section>
+       
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+            <div class="card bg-base-100 shadow-xl p-6 border-t-8 border-error">
+                <h3 class="text-2xl font-bold text-error flex items-center">
+                    <span class="text-4xl mr-3">❌</span> INTEL IS NOT ESPIONAGE
+                </h3>
+                <p class="mt-3 text-base-content/90">
+                    We are <b>not</b> employing tiny cameras or dead drops. Our <b>"clandestine activity"</b> is limited to executing complex SQL queries on public data. The secrets we seek aren't behind military-grade firewalls; they are lost in bureaucratic transfer.
+                </p>
+                <p class="mt-2 text-primary font-semibold">
+                    <b>Insight:</b> Our weapon is the <b>Systemic Visibility</b> we gain from public records, not hacking.
+                </p>
+            </div>
+
+            <div class="card bg-base-100 shadow-xl p-6 border-t-8 border-success">
+                <h3 class="text-2xl font-bold text-success flex items-center">
+                    <span class="text-4xl mr-3">✅</span> INTEL IS ACCURATE DATA
+                </h3>
+                <p class="mt-3 text-base-content/90">
+                    Intelligence is the relentless pursuit of truth. If the city's old report says a village has 5,000 people, but our integrated system, cross-referenced with local utilities, says <b>12,000</b>, <b>Intelligence is the 12,000.</b>
+                </p>
+                <p class="mt-2 text-primary font-semibold">
+                    <b>Impact:</b> It prevents resource failure. We ensure assets and planning are scaled to the <b>actual population</b>, not the outdated one.
+                </p>
+            </div>
+
+            <div class="card bg-base-100 shadow-xl p-6 border-t-8 border-warning">
+                <h3 class="text-2xl font-bold text-warning flex items-center">
+                    <span class="text-4xl mr-3">⏱️</span> INTEL IS UP-TO-DATE DATA
+                </h3>
+                <p class="mt-3 text-base-content/90">
+                    It is information so current, you could set your watch by it. We replace slow, quarterly reports with data that is <b>live</b>. When a threat is detected at 1:00 PM, the alert is processed, geo-located, and actionable by <b>1:01 PM.</b>
+                </p>
+                <p class="mt-2 text-primary font-semibold">
+                    <b>Impact:</b> It enables <b>proactive, real-time action</b>, allowing commanders to intervene before a crisis escalates.
+                </p>
+            </div>
+        </div>
+    </section>
+    <!-- END NEW SECTION -->
+
+
     <section>
         <h2 class="text-3xl font-bold text-base-content mb-4 border-b border-primary/50 pb-2">
             The SENTINEL Anagram: A Blueprint for Intelligence Superiority

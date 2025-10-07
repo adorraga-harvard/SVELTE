@@ -4,14 +4,34 @@
   import { fade } from 'svelte/transition';
 
   const geoFolder = '/etc/GEO/lowres/';
-  export let dataSource: Record<string, number> = {};
+  export let dataSource: {category: string; quantity: number}[] = [];
 
+  console.log('Component initialized. Data source:', dataSource);
   let chartDiv: HTMLDivElement;
   let chart: echarts.ECharts | null = null;
+  let dataMap: Record<string, number> = {};
 
-  let currentLevel: "country" | "region" | "province" = "country";
+  // Reactive statement to convert the array into a map for quick lookups
+  $: {
+    dataMap = {};
+    dataSource.forEach(d => {
+      // Normalize and trim the data source key to ALL CAPS for consistent lookup
+      const normalizedCategory = d.category.toUpperCase().trim();
+      dataMap[normalizedCategory] = d.quantity;
+    });
+    // Trigger a map re-render when the data map changes
+    if (chart && Object.keys(dataMap).length > 0) {
+      if (currentLevel === "country") {
+        renderMap('country.0.001.json', "country");
+      }
+    }
+  }
+
+  let currentLevel: "country" | "region" | "province" | "municity" | "barangay" = "country";
   let currentRegionId: string | null = null;
   let currentProvinceId: string | null = null;
+  let currentMunicityId: string | null = null;
+  let currentBarangayId: string | null = null;
 
   let showVisualMapHelp = false;
 
@@ -40,25 +60,6 @@
   // ---------------------------
   // Helpers
   // ---------------------------
-  async function loadTSV(path: string): Promise<Record<string, number>> {
-    try {
-      const text = await fetch(path).then(r => {
-        if (!r.ok) throw new Error(`Failed to load TSV data: ${r.statusText}`);
-        return r.text();
-      });
-      const rows = text.trim().split('\n').slice(1);
-      const map: Record<string, number> = {};
-      rows.forEach(line => {
-        const [region, count] = line.split('\t');
-        if (region) map[region.toUpperCase()] = parseInt(count || '0');
-      });
-      return map;
-    } catch (e) {
-      console.error(e);
-      return {};
-    }
-  }
-
   function getRegionPSGC(regionName: string): string | null {
     const normalizedName = regionName.toUpperCase();
     return regionPSGCMap[normalizedName] || null;
@@ -67,6 +68,35 @@
   // Normalize PSGC codes to a standard length
   function padPSGC(code: string, length = 10) {
     return code.padEnd(length, '0');
+  }
+
+  // A more robust function to normalize GeoJSON names
+  function normalizeRegionNames(name: string): string[] {
+    const allCaps = name.toUpperCase().trim();
+    let normalizedNames = [allCaps]; // Always include the original, trimmed name
+
+    // Check for the format 'REGION X (NAME)'
+    const regionNameMatch = allCaps.match(/REGION [IVXLC]+ \(([^)]+)\)/);
+    if (regionNameMatch && regionNameMatch[1]) {
+      normalizedNames.push(regionNameMatch[1].trim());
+    }
+
+    // Check for names with an acronym in parentheses
+    const acronymMatch = allCaps.match(/(.+)\s+\((.+)\)/);
+    if (acronymMatch && acronymMatch[1] && acronymMatch[2]) {
+      // GeoJSON name outside of the parentheses
+      normalizedNames.push(acronymMatch[1].trim());
+      // GeoJSON name inside the parentheses
+      normalizedNames.push(acronymMatch[2].trim());
+    }
+
+    // Check for names with a trailing 'REGION'
+    if (allCaps.endsWith(' REGION')) {
+      normalizedNames.push(allCaps.replace(' REGION', '').trim());
+    }
+
+    // Return a unique array of names to check, starting with the most specific match
+    return [...new Set(normalizedNames)];
   }
 
   // ---------------------------
@@ -81,18 +111,32 @@
   // ---------------------------
   // Render Map
   // ---------------------------
-  async function renderMap(filename: string, level: "country" | "region" | "province") {
+  async function renderMap(filename: string, level: "country" | "region" | "province" | "municity" | "barangay") {
+    if (!chartDiv) return;
+    if (!chart) chart = echarts.init(chartDiv);
+
     const geoData = await loadGeoJSON(filename);
     const mapName = level === "country" ? "COUNTRY_MAP" : `MAP_${Date.now()}`;
 
-    if (!chart) return;
-
     const seriesData = geoData.features.map((f: any) => {
-      const nameKey = level === "country" ? "adm1_en" : level === "region" ? "adm2_en" : "adm3_en";
-      const regionName = f.properties[nameKey]?.toUpperCase() || "";
-      const value = dataSource[regionName] || 0;
+      let nameKey: string;
+      if (level === "country") nameKey = "adm1_en";
+      else if (level === "region") nameKey = "adm2_en";
+      else if (level === "province") nameKey = "adm3_en";
+      else if (level === "municity") nameKey = "adm4_en";
+      else nameKey = "adm4_en";
 
-      f.value = value;
+      const geoJsonName = f.properties[nameKey]?.toUpperCase() || "";
+
+      const normalizedNames = normalizeRegionNames(geoJsonName);
+
+      let value = 0;
+      for (const name of normalizedNames) {
+        if (dataMap[name] !== undefined) {
+          value = dataMap[name];
+          break;
+        }
+      }
 
       return {
         name: f.properties[nameKey] || f.properties.name,
@@ -101,8 +145,16 @@
       };
     });
 
-    const featureValues = seriesData.map(d => d.value).filter(v => !isNaN(v));
+    const featureValues = seriesData.map(d => d.value).filter(v => !isNaN(v) && v > 0);
+    const finalMin = featureValues.length ? Math.min(...featureValues) : 0;
     const finalMax = featureValues.length ? Math.max(...featureValues) : 100;
+
+    let colorRange;
+    if (dataSource && dataSource.length > 0) {
+      colorRange = ['#FFFF99', '#FF9933', '#CC0000', '#800000'];
+    } else {
+      colorRange = ['#a5abb6', '#c9cfd8', '#f2f4f8', '#8f95a2', '#7b8089', '#5b6169'];
+    }
 
     echarts.registerMap(mapName, geoData);
 
@@ -114,7 +166,7 @@
           const value = params.value || 0;
           return `
             <div style="padding:5px; font-weight:bold; font-size:14px; border-bottom:1px solid #ccc; margin-bottom:4px;">${name}</div>
-            <div style="padding:0 5px; font-size:13px;">
+            <div style="padding:0 5px; font-size:12px; color: #333;">
               <span style="color:#666;">Total Incidents:</span>
               <span style="font-weight:bold; float:right;">${value.toLocaleString()}</span>
             </div>
@@ -122,22 +174,20 @@
         }
       },
       visualMap: {
-        min: 0,
+        min: finalMin,
         max: finalMax,
         left: 'left',
         top: 'middle',
         orient: 'vertical',
         text: ['High', 'Low'],
+        textStyle: {
+          color: '#333'
+        },
         calculable: true,
         itemWidth: 50,
         itemHeight: 250,
         inRange: {
-          color: [
-            'rgba(255, 255, 153, 0.4)',
-            'rgba(255, 153, 51, 0.5)',
-            'rgba(204, 0, 0, 0.6)',
-            'rgba(128, 0, 0, 0.8)'
-          ]
+          color: colorRange
         },
         formatter: (v, i) => i === 0 ? 'Drag handles to filter' : `${v}+`
       },
@@ -148,8 +198,12 @@
         data: seriesData,
         layoutCenter: ['50%', '50%'],
         layoutSize: '95%',
-        nameProperty: level === "country" ? "adm1_en" : level === "region" ? "adm2_en" : "adm3_en",
-        label: { show: level !== "country", color: '#fff', fontSize: 10 },
+        nameProperty: level === "country" ? "adm1_en" : level === "region" ? "adm2_en" : level === "province" ? "adm3_en" : level === "municity" ? "adm4_en" : "adm4_en",
+        label: {
+          show: level !== "country",
+          color: '#333',
+          fontSize: 8
+        },
         itemStyle: {
           borderColor: '#000',
           borderWidth: 1,
@@ -187,8 +241,24 @@
         if (!provincePsgc) return;
 
         currentLevel = "province";
-        currentProvinceId = padPSGC(String(provincePsgc), 10);
-        await renderMap(`provdists-province-${currentProvinceId}.0.001.json`, "province");
+        currentProvinceId = provincePsgc;
+        await renderMap(`municities-provdist-${currentProvinceId}.0.001.json`, "province");
+      } else if (level === "province") {
+        const clickedData = params.data || {};
+        const municityPsgc = clickedData.properties?.adm3_psgc;
+        if (!municityPsgc) return;
+
+        currentLevel = "municity";
+        currentMunicityId = municityPsgc;
+        await renderMap(`bgysubmuns-municity-${currentMunicityId}.0.001.json`, "municity");
+      } else if (level === "municity") {
+        const clickedData = params.data || {};
+        const barangayPsgc = clickedData.properties?.adm4_psgc;
+        if (!barangayPsgc) return;
+
+        currentLevel = "barangay";
+        currentBarangayId = barangayPsgc;
+        await renderMap(`bgysubmuns-municity-${currentMunicityId}.0.001.json`, "barangay");
       }
     });
   }
@@ -197,16 +267,18 @@
     currentLevel = "country";
     currentRegionId = null;
     currentProvinceId = null;
-    renderMap('country.0.001.json', "country");
+    currentMunicityId = null;
+    renderMap('country.0.01.json', "country");
   }
 
   onMount(async () => {
-    dataSource = await loadTSV("/mapping/data_source.tsv");
+    if (chartDiv) {
+      chart = echarts.init(chartDiv);
+      window.addEventListener('resize', () => chart?.resize());
+    }
 
-    if (chartDiv) chart = echarts.init(chartDiv);
     await renderMap('country.0.001.json', "country");
 
-    window.addEventListener('resize', () => chart?.resize());
     return () => {
       window.removeEventListener('resize', () => chart?.resize());
       chart?.dispose();
@@ -217,7 +289,7 @@
 <div class="map-wrap relative">
   {#if currentLevel !== "country"}
     <button
-      class="absolute left-1/2 top-4 transform -translate-x-1/2 bg-white border border-gray-300 rounded px-3 py-1 shadow text-sm z-20 hover:bg-gray-100 transition-colors"
+      class="absolute left-1/2 top-4 transform -translate-x-1/2 bg-gray-800 text-white font-bold border-2 border-gray-600 rounded-md px-4 py-2 shadow-lg text-sm z-30 hover:bg-gray-700 transition-colors"
       on:click={backToCountry}
       aria-label="Back to country view"
     >
