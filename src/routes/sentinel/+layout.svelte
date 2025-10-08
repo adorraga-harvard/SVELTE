@@ -1,5 +1,5 @@
 <script lang="ts">
-  import ThemeChooser from './project_ThemeChooser.svelte';
+  import ThemeChooser from '$lib/Customized/Components/Comp_ThemeChooser.svelte';
   import './project_Scoped.css';
   import { page } from '$app/stores';
   import { fly } from 'svelte/transition';
