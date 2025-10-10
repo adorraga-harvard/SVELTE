@@ -29,5 +29,12 @@
       <jdbc-url>jdbc:sqlite:/etc/nginx/digigov.sqlite</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="WEB3@76.105.8.72" uuid="75e37c21-5fdd-4f4e-ba0a-ff21cfda5f65">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://76.105.8.72:5432/WEB3</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>

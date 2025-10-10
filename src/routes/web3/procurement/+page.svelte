@@ -5,6 +5,7 @@
   import Comp_Watchdog from "./Components/Comp_Watchdog.svelte";
   import Comp_FOI from "./Components/Comp_FOI.svelte";
   import Comp_Privacy from "./Components/Comp_Privacy.svelte";
+  import Comp_RolesDetail from "./Components/Comp_RolesDetail.svelte";
 
   let activeModal: string | null = null;
 
@@ -40,30 +41,48 @@
       steps: ['Audit']
     }
   ];
+
+  const workflowEntities = [
+    { entity: 'Procuring Entity (Agency / LGU / Department)', function: 'The government body needing goods or services', role: 'Proponent / Implementer' },
+    { entity: 'Bids and Awards Committee (BAC)', function: 'Manages the bidding — from posting to award', role: 'Mover (Approver / Awarder)' },
+    { entity: 'PhilGEPS', function: 'Provides the e-platform and official records', role: 'Auditor / System Registrar' },
+    { entity: 'COA (Commission on Audit)', function: 'Audits all disbursements and awards', role: 'Auditor (External)' },
+    { entity: 'End-User / Project Manager', function: 'Creates and submits the initial project or request', role: 'Submitter' },
+    { entity: 'Supplier / Bidder', function: 'Participates in the bidding', role: 'Bidder Persona' }
+  ];
+
+  const workflowStages = [
+    ['Project is created / request for procurement submitted', 'Submitter (Implementing Unit)', 'This creates the base record.'],
+    ['Posting of Invitation to Bid', 'Mover (BAC Secretariat)', 'May require approval from HOPE (Head of Procuring Entity).'],
+    ['Bid submission period', 'Bidders', 'No approval here — just open competition.'],
+    ['Bid evaluation', 'Mover (BAC Technical Group)', 'They recommend the Lowest Calculated Bid (LCB).'],
+    ['Approval of BAC Resolution', 'Mover (HOPE or Authorized Approver)', 'This is the “approval” step.'],
+    ['Issuance of Notice of Award (NOA)', 'Mover (BAC / Approver)', 'The award step. Usually signed by HOPE.'],
+    ['Auditing / Post-Validation', 'Auditor (PhilGEPS / COA)', 'Ensures legality, compliance, and transparency.']
+  ];
 </script>
 
 <div class="text-base-content bg-base-50 min-h-screen">
-  <!-- HEADER -->
-  <section class="text-center py-4 bg-gradient-to-br from-primary to-accent text-primary-content shadow-lg">
-    <h1 class="text-4xl md:text-5xl font-extrabold ">Procurement 3.0: A Transparent Philippines</h1>
-    <p class="max-w-3xl mx-auto text-lg opacity-90">
-      <b>A national vision powered by Web3.</b> <br>Reimagining how infrastructure is planned, funded, and delivered with transparency, efficiency, and citizen trust.
-    </p>
-  </section>
-
   <!-- DOMAINS -->
-  <section class="max-w-6xl mx-auto p-4 mt-6">
-    <h2 class="text-2xl md:text-3xl font-bold border-b-4 border-accent pb-2 mb-2">
+  <section class="max-w-6xl mx-auto p-4 pt-0 mt-0">
+    <h2 class="text-2xl md:text-3xl font-bold border-b-4 border-accent pb-2 mb-2 mt-0">
       Key Infrastructure Domains & Agencies
     </h2>
     <div class="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
       {#each domains as { title, agencies, discussion }}
-        <div class="rounded-xl p-2 shadow-lg bg-base-200 hover:shadow-xl transition-transform hover:-translate-y-1 border-l-4 border-accent">
+        <div
+          class="rounded-xl p-2 shadow-lg bg-base-200 hover:shadow-xl transition-transform hover:-translate-y-1 border-l-4 border-accent"
+        >
           <h3 class="text-xl font-extrabold text-primary mb-2">{title}</h3>
           <p class="text-xs opacity-80">{discussion}</p>
           <div class="list-disc ml-5 space-y-1 mb-1">
             {#each agencies as agency}
-              <div class="text-2xl font-extrabold" style="text-shadow:2px 2px 6px lime">{agency}</div>
+              <div
+                class="text-2xl font-extrabold"
+                style="text-shadow:2px 2px 6px lime"
+              >
+                {agency}
+              </div>
             {/each}
           </div>
         </div>
@@ -71,21 +90,50 @@
     </div>
   </section>
 
-  <!-- PROCUREMENT LIFECYCLE -->
-  <section class="max-w-6xl mx-auto p-4 mt-8">
-    <h2 class="text-2xl md:text-3xl font-bold border-b-4 border-accent pb-2 mb-2">
+
+  <!-- SECTION 1: ENTITIES / ROLES -->
+  <section class="max-w-6xl mx-auto p-6 mt-8">
+    <h2 class="text-2xl md:text-3xl font-bold border-b-4 border-accent pb-2 mb-1">
+      🧩 Entities / Roles in the Government Procurement Workflow
+    </h2>
+    <p class="text-accent italic opacity-80 mb-4">
+      💡 <span class="cursor-pointer hover:underline" on:click={() => activeModal = 'ROLES'}>Who are involved</span>
+    </p>
+
+    <div class="overflow-x-auto bg-base-200 rounded-xl shadow-lg">
+      <table class="table table-zebra text-sm">
+        <thead class="bg-base-300 text-base-content/80">
+          <tr>
+            <th>Entity</th>
+            <th>Function</th>
+            <th>Possible System Role</th>
+          </tr>
+        </thead>
+        <tbody>
+          {#each workflowEntities as { entity, function: fn, role }}
+            <tr>
+              <td class="font-semibold">{entity}</td>
+              <td>{fn}</td>
+              <td class="text-primary font-medium">{role}</td>
+            </tr>
+          {/each}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- SECTION 2: PROCUREMENT LIFECYCLE -->
+  <section class="max-w-6xl mx-auto p-6 mt-8">
+    <h2 class="text-2xl md:text-3xl font-bold border-b-4 border-accent pb-2 mb-1">
       Procurement Lifecycle: From Idea to Reality
     </h2>
-    <div class="space-y-2">
+    <p class="text-accent italic opacity-80 mb-4">💡 What happens</p>
+
+    <div class="space-y-3">
       {#each processPhases as phase, index}
         <div class="flex gap-4 items-start">
-          <!-- Number -->
-          <div class="w-10 text-5xl font-bold text-primary drop-shadow-[2px_2px_6px_lime] flex-shrink-0">
-            {index + 1}
-          </div>
-
-          <!-- Phase Card -->
-          <div class="bg-base-200 rounded-xl shadow-md p-2 hover:shadow-lg transition flex-1">
+          <div class="w-10 text-5xl font-bold text-primary drop-shadow-[2px_2px_6px_lime] flex-shrink-0">{index + 1}</div>
+          <div class="bg-base-200 rounded-xl shadow-md p-3 hover:shadow-xl transition flex-1">
             <h3 class="text-xl font-semibold text-primary mb-1 cursor-pointer"
                 on:click={() => {
                   if (phase.title === 'Preparation') activeModal = 'PREP';
@@ -93,42 +141,15 @@
                 }}>
               {phase.title}
             </h3>
-            <p class="mb-2 text-sm opacity-80">
-              {#if phase.title === 'Preparation'}
-                Imagine a bustling government office where project teams identify infrastructure needs—
-                like a new bridge or school. In Procurement 3.0, plans are submitted digitally, approvals are
-                logged on a verifiable ledger, and citizens can track submissions and reviews transparently.
-              {:else if phase.title === 'Acquisition'}
-                Projects enter public bidding via PhilGEPS. Each bid published, opened, and awarded is
-                immutably recorded. Contractors submit digitally, ensuring fair competition, and citizens
-                can track the process in real-time.
-              {:else if phase.title === 'Execution'}
-                Contractors begin work, reporting progress via milestones. Agencies track implementation
-                digitally, enabling real-time oversight and milestone-based payments.
-              {:else if phase.title === 'Evaluation'}
-                Completed projects are audited by COA. Blockchain logs preserve the full project history,
-                allowing swift verification of compliance and accountability.
-              {/if}
-            </p>
-
-            <!-- Steps -->
+            <p class="mb-2 text-sm opacity-80">{phase.description}</p>
             <div class="flex flex-wrap gap-2">
               {#each phase.steps as step}
                 {#if step === 'Bidding'}
-                  <span class="badge badge-accent badge-outline cursor-pointer hover:underline"
-                        on:click={() => activeModal = 'PHILGEPS'}>
-                    {step}
-                  </span>
+                  <span class="badge badge-accent badge-outline cursor-pointer hover:underline" on:click={() => activeModal = 'PHILGEPS'}>{step}</span>
                 {:else if step === 'Project Plan Submission' || step === 'Project Approval'}
-                  <span class="badge badge-accent badge-outline cursor-pointer hover:underline"
-                        on:click={() => activeModal = 'PREP'}>
-                    {step}
-                  </span>
+                  <span class="badge badge-accent badge-outline cursor-pointer hover:underline" on:click={() => activeModal = 'PREP'}>{step}</span>
                 {:else if step === 'Awarding'}
-                  <span class="badge badge-accent badge-outline cursor-pointer hover:underline"
-                        on:click={() => activeModal = 'ACQ'}>
-                    {step}
-                  </span>
+                  <span class="badge badge-accent badge-outline cursor-pointer hover:underline" on:click={() => activeModal = 'ACQ'}>{step}</span>
                 {:else}
                   <span class="badge badge-accent badge-outline">{step}</span>
                 {/if}
@@ -140,12 +161,45 @@
     </div>
   </section>
 
-  <!-- KEY DIFFERENCES -->
-  <section class="max-w-6xl mx-auto p-6 mt-6 mb-16">
-    <h2 class="text-2xl md:text-3xl font-bold border-b-4 border-accent pb-2 mb-4">
+  <!-- SECTION 3: STEP-BY-STEP FLOW -->
+  <section class="max-w-6xl mx-auto p-6 mt-10">
+    <h2 class="text-2xl md:text-3xl font-bold border-b-4 border-accent pb-2 mb-1">
+      ⚙️ Step-by-Step Flow and Authority
+    </h2>
+    <p class="text-accent italic opacity-80 mb-4">💡 Who does what</p>
+
+    <div class="overflow-x-auto bg-base-200 rounded-xl shadow-lg">
+      <table class="table text-sm">
+        <thead class="bg-base-300 text-base-content/80">
+          <tr>
+            <th class="w-1/12 text-center">#</th>
+            <th class="w-4/12">Stage / Action</th>
+            <th class="w-3/12">Responsible Role</th>
+            <th class="w-4/12">Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          {#each workflowStages as [action, role, note], i}
+            <tr class="hover:bg-base-100 transition-colors">
+              <td class="text-center text-2xl text-accent font-bold">{i + 1}</td>
+              <td class="font-semibold">{action}</td>
+              <td class="text-primary">{role}</td>
+              <td class="text-sm opacity-80">{note}</td>
+            </tr>
+          {/each}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- SECTION 4: DIFFERENCES -->
+  <section class="max-w-6xl mx-auto p-6 mt-10 mb-16">
+    <h2 class="text-2xl md:text-3xl font-bold border-b-4 border-accent pb-2 mb-1">
       Key Differences Between Current System and Procurement 3.0
     </h2>
-    <ul class="list-disc ml-6 space-y-2 text-sm">
+    <p class="text-accent italic opacity-80 mb-4">💡 Why it matters</p>
+
+    <ul class="list-disc ml-6 space-y-2 text-sm leading-relaxed">
       <li><strong>Transparency:</strong> Procurement 3.0 logs every milestone on a verifiable ledger, unlike opaque current processes.</li>
       <li><strong>Citizen Oversight:</strong> Citizens can track progress in real-time without FOI requests.</li>
       <li><strong>Immutable Audit Trail:</strong> Blockchain ensures all approvals and status updates are tamper-proof.</li>
@@ -155,23 +209,11 @@
   </section>
 
   <!-- TRANSPARENCY & RIGHTS -->
-  <section class="max-w-6xl mx-auto p-4 mt-6 mb-8">
+  <section class="max-w-6xl mx-auto p-6 mt-8 mb-10">
     <ul class="ml-6 space-y-2">
-      <li>
-        <strong class="cursor-pointer text-accent hover:underline" on:click={() => activeModal = 'WATCHDOG'}>
-          Digital Watchdog
-        </strong>: Logs mission-critical milestones on a verifiable ledger.
-      </li>
-      <li>
-        <strong class="cursor-pointer text-accent hover:underline" on:click={() => activeModal = 'FOI'}>
-          Freedom of Information (FOI)
-        </strong>: Ensuring transparency across agencies.
-      </li>
-      <li>
-        <strong class="cursor-pointer text-accent hover:underline" on:click={() => activeModal = 'PRIVACY'}>
-          Data Privacy & Security
-        </strong>: Balancing openness with protection of personal and strategic data.
-      </li>
+      <li><strong class="cursor-pointer text-accent hover:underline" on:click={() => activeModal = 'WATCHDOG'}>Digital Watchdog</strong>: Logs mission-critical milestones on a verifiable ledger.</li>
+      <li><strong class="cursor-pointer text-accent hover:underline" on:click={() => activeModal = 'FOI'}>Freedom of Information (FOI)</strong>: Ensuring transparency across agencies.</li>
+      <li><strong class="cursor-pointer text-accent hover:underline" on:click={() => activeModal = 'PRIVACY'}>Data Privacy & Security</strong>: Balancing openness with protection of personal and strategic data.</li>
     </ul>
   </section>
 
@@ -179,8 +221,8 @@
   <Comp_PREP show={activeModal === 'PREP'} onclose={() => activeModal = null} />
   <Comp_ACQ show={activeModal === 'ACQ'} onclose={() => activeModal = null} />
   <Comp_PHILGEPS show={activeModal === 'PHILGEPS'} onclose={() => activeModal = null} />
-
   <Comp_Watchdog show={activeModal === 'WATCHDOG'} onclose={() => activeModal = null} />
   <Comp_FOI show={activeModal === 'FOI'} onclose={() => activeModal = null} />
   <Comp_Privacy show={activeModal === 'PRIVACY'} onclose={() => activeModal = null} />
+  <Comp_RolesDetail show={activeModal === 'ROLES'} onclose={() => activeModal = null} />
 </div>
